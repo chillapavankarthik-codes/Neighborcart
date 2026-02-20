@@ -1,11 +1,13 @@
-<section class="bento-shell">
-  <h3>High-Value Flow Cards</h3>
+<section class="bento-shell" appRevealOnScroll [revealDelay]="100">
+  <h3 appParallax="12">High-Value Flow Cards</h3>
   <p class="subcopy">
     Post faster, match nearby, and close secure handoffs without paying unnecessary delivery fees.
   </p>
   <app-bento-grid>
     <app-bento-card
-      *ngFor="let feature of features"
+      *ngFor="let feature of features; let i = index"
+      appRevealOnScroll
+      [revealDelay]="i * 80"
       [name]="feature.name"
       [description]="feature.description"
       [metric]="feature.metric"

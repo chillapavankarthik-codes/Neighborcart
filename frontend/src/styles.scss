@@ -18,10 +18,15 @@ body {
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
   color: var(--ink-strong);
   background: #050506;
+  overflow-x: hidden;
 }
 
 h1,

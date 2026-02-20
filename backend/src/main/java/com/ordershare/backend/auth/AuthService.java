@@ -90,7 +90,12 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP expired");
         }
 
-        String providedHash = cryptoUtil.sha256(request.getOtpCode());
+        String providedCode = request.getOtpCode() == null ? "" : request.getOtpCode().replaceAll("\\D", "");
+        if (providedCode.length() != 6) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP must be a 6-digit code");
+        }
+
+        String providedHash = cryptoUtil.sha256(providedCode);
         if (!providedHash.equals(otpCode.getCodeHash())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid OTP code");
         }

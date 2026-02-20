@@ -10,4 +10,6 @@ public interface OrderPostRepository extends JpaRepository<OrderPost, String> {
     List<OrderPost> findAllByOrderByCreatedAtDesc();
 
     List<OrderPost> findAllByOwnerUser_IdOrderByCreatedAtDesc(String ownerUserId);
+
+    boolean existsByOwnerUser_IdAndTitle(String ownerUserId, String title);
 }

@@ -1,25 +1,29 @@
 <div class="page-shell">
-  <header class="hero">
-    <div class="hero__copy">
+  <header class="hero" appRevealOnScroll>
+    <div class="hero__copy" appParallax="18">
       <p class="eyebrow">NEIGHBORCART</p>
       <h1>Beat minimum-order fees with nearby people in minutes.</h1>
       <p class="hero__sub">
         Post your cart gap, discover neighbors within your radius, and close orders faster without stuffing carts with random items.
       </p>
     </div>
-    <aside class="ad-slot ad-slot--hero">
+    <aside class="ad-slot ad-slot--hero" appParallax="-12">
       <p class="ad-label">Sponsored</p>
       <h3>FreshHub+</h3>
       <p>Weekend grocery drops with neighborhood discounts.</p>
     </aside>
   </header>
 
-  <section class="panel showcase-panel">
+  <section class="panel showcase-panel" appRevealOnScroll [revealDelay]="80">
     <app-spline-scene-basic></app-spline-scene-basic>
     <app-bento-demo></app-bento-demo>
   </section>
 
-  <section class="panel auth-panel">
+  <section class="panel parallax-panel" appRevealOnScroll [revealDelay]="120">
+    <app-parallax-feature-section></app-parallax-feature-section>
+  </section>
+
+  <section class="panel auth-panel" appRevealOnScroll [revealDelay]="160">
     <div class="auth-header">
       <h2>Secure Login (OTP)</h2>
       <span class="status" *ngIf="isAuthenticated">Authenticated</span>
@@ -33,7 +37,7 @@
         </label>
         <label>
           Phone number
-          <input type="tel" formControlName="phoneNumber" placeholder="(555) 555-1234">
+          <input type="tel" inputmode="tel" formControlName="phoneNumber" placeholder="(555) 555-1234">
         </label>
         <button type="submit" class="primary" [disabled]="authLoading">
           {{ authLoading ? 'Sending...' : 'Request OTP' }}
@@ -43,7 +47,7 @@
       <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" class="auth-form">
         <label>
           6-digit OTP
-          <input type="text" formControlName="otpCode" maxlength="6" placeholder="Enter OTP code">
+          <input type="text" inputmode="numeric" formControlName="otpCode" maxlength="6" placeholder="Enter OTP code">
         </label>
         <button type="submit" class="cta" [disabled]="authLoading">
           {{ authLoading ? 'Verifying...' : 'Verify & Sign In' }}
@@ -65,7 +69,7 @@
     <p *ngIf="authMessage" class="auth-message">{{ authMessage }}</p>
   </section>
 
-  <section class="panel viewer-panel">
+  <section class="panel viewer-panel" appRevealOnScroll [revealDelay]="180">
     <h2>Your Discovery Radius</h2>
     <form [formGroup]="viewerForm" class="viewer-grid">
       <label>
@@ -98,7 +102,7 @@
   </section>
 
   <main class="content-grid">
-    <section id="create-post" class="panel create-panel">
+    <section id="create-post" class="panel create-panel" appRevealOnScroll [revealDelay]="200">
       <h2>Post Your Order Gap</h2>
       <form [formGroup]="createPostForm" class="create-grid" (ngSubmit)="createPost()">
         <label>
@@ -157,7 +161,7 @@
       <p class="create-feedback error" *ngIf="postFeedbackType === 'error'">{{ postFeedback }}</p>
     </section>
 
-    <section id="nearby-feed" class="panel feed-panel">
+    <section id="nearby-feed" class="panel feed-panel" appRevealOnScroll [revealDelay]="220">
       <div class="feed-header">
         <h2>Nearby Shared Orders</h2>
         <button type="button" class="ghost" (click)="loadPosts()">Refresh feed</button>
@@ -166,7 +170,11 @@
       <p *ngIf="loading" class="muted">Loading active posts...</p>
       <p *ngIf="!loading && posts.length === 0" class="muted">No posts found for this radius. Expand range or create one.</p>
 
-      <article class="post-card" *ngFor="let post of posts; trackBy: trackByPostId">
+      <article
+        class="post-card"
+        *ngFor="let post of posts; let i = index; trackBy: trackByPostId"
+        appRevealOnScroll
+        [revealDelay]="i * 70">
         <div class="post-card__header">
           <div>
             <p class="store">{{ post.storeName }}</p>
@@ -224,7 +232,7 @@
       </aside>
     </section>
 
-    <section class="panel my-posts-panel" *ngIf="isAuthenticated">
+    <section class="panel my-posts-panel" *ngIf="isAuthenticated" appRevealOnScroll [revealDelay]="250">
       <div class="feed-header">
         <h2>My Posted Feeds</h2>
         <button type="button" class="ghost" (click)="loadMyPosts()">Refresh</button>
@@ -233,7 +241,11 @@
       <p class="muted" *ngIf="myPostsLoading">Loading your posts...</p>
       <p class="muted" *ngIf="!myPostsLoading && myPosts.length === 0">No posts yet. Publish one above.</p>
 
-      <article class="my-post-card" *ngFor="let feed of myPosts; trackBy: trackByMyPostId">
+      <article
+        class="my-post-card"
+        *ngFor="let feed of myPosts; let i = index; trackBy: trackByMyPostId"
+        appRevealOnScroll
+        [revealDelay]="i * 80">
         <div class="post-card__header">
           <div>
             <p class="store">{{ feed.post.storeName }}</p>
@@ -266,7 +278,7 @@
           <h4>People Who Want To Collaborate</h4>
           <p class="muted" *ngIf="feed.interestedUsers.length === 0">No collaborators yet.</p>
 
-          <article class="collab-card" *ngFor="let person of feed.interestedUsers">
+          <article class="collab-card" *ngFor="let person of feed.interestedUsers; let j = index" appRevealOnScroll [revealDelay]="j * 60">
             <p><strong>{{ person.displayName }}</strong> · {{ person.phoneNumber }}</p>
             <p class="muted">Interested at {{ person.interestedAt | date:'EEE, MMM d · h:mm a' }}</p>
           </article>
@@ -274,7 +286,7 @@
       </article>
     </section>
 
-    <section id="chat" class="panel chat-panel" *ngIf="selectedPost">
+    <section id="chat" class="panel chat-panel" *ngIf="selectedPost" appRevealOnScroll [revealDelay]="260">
       <div class="chat-header">
         <h2>Chat · {{ selectedPost.storeName }}</h2>
         <button type="button" class="ghost" (click)="closeChat()">Close</button>

@@ -1,8 +1,8 @@
-<app-card className="spline-card">
+<app-card className="spline-card" appRevealOnScroll [revealDelay]="70">
   <app-spotlight className="spline-spotlight" fill="white"></app-spotlight>
 
   <div class="spline-layout">
-    <div class="copy-column">
+    <div class="copy-column" appParallax="20">
       <p class="badge">NEIGHBORCART LIVE</p>
       <h3>Find a Nearby Order Match Fast</h3>
       <p>
@@ -11,7 +11,7 @@
       </p>
     </div>
 
-    <div class="scene-column">
+    <div class="scene-column" appParallax="-26">
       <app-spline-scene
         [scene]="scene"
         className="full-size"

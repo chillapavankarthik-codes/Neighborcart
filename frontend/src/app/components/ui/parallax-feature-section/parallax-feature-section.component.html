@@ -1,0 +1,28 @@
+<section class="feature-shell">
+  <header class="feature-intro" appRevealOnScroll [revealDelay]="60">
+    <p class="intro-badge">PARALLAX FLOW</p>
+    <h3 appParallax="20">Smooth collaboration journey while you scroll.</h3>
+    <p>
+      Inspired by your React prompts, adapted for Angular to make each section feel alive with motion and depth.
+    </p>
+  </header>
+
+  <article
+    class="feature-row"
+    *ngFor="let section of sections; let i = index"
+    [class.feature-row--reverse]="section.reverse"
+    appRevealOnScroll
+    [revealDelay]="i * 110"
+  >
+    <div class="feature-copy" [appParallax]="section.reverse ? -16 : 16">
+      <p class="feature-tag">{{ section.tag }}</p>
+      <h4>{{ section.title }}</h4>
+      <p>{{ section.description }}</p>
+    </div>
+
+    <div class="feature-visual" [appParallax]="section.reverse ? 28 : -28">
+      <img [src]="section.imageUrl" [alt]="section.title" loading="lazy" />
+      <span class="halo"></span>
+    </div>
+  </article>
+</section>

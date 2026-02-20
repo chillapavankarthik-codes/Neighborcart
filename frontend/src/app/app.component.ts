@@ -8,7 +8,10 @@ import { ChatMessage } from './models/chat-message.model';
 import { MyPostFeed } from './models/my-post-feed.model';
 import { OrderPost } from './models/order-post.model';
 import { BentoDemoComponent } from './components/ui/bento-demo/bento-demo.component';
+import { ParallaxFeatureSectionComponent } from './components/ui/parallax-feature-section/parallax-feature-section.component';
 import { SplineSceneBasicComponent } from './components/ui/spline-scene-basic/spline-scene-basic.component';
+import { ParallaxScrollDirective } from './directives/parallax-scroll.directive';
+import { RevealOnScrollDirective } from './directives/reveal-on-scroll.directive';
 import { AuthService } from './services/auth.service';
 import { ChatService } from './services/chat.service';
 import { CreateOrderPostPayload, OrderPostService } from './services/order-post.service';
@@ -21,8 +24,11 @@ import { CreateOrderPostPayload, OrderPostService } from './services/order-post.
     ReactiveFormsModule,
     DatePipe,
     DecimalPipe,
+    RevealOnScrollDirective,
+    ParallaxScrollDirective,
     SplineSceneBasicComponent,
-    BentoDemoComponent
+    BentoDemoComponent,
+    ParallaxFeatureSectionComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -64,11 +70,11 @@ export class AppComponent implements OnInit {
 
   readonly authRequestForm = this.fb.group({
     displayName: ['Neighbor', [Validators.required, Validators.maxLength(40)]],
-    phoneNumber: ['', [Validators.required, Validators.maxLength(20)]]
+    phoneNumber: ['', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[0-9+\-()\s]{8,20}$/)]]
   });
 
   readonly otpForm = this.fb.group({
-    otpCode: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]]
+    otpCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]]
   });
 
   readonly createPostForm = this.fb.group({
@@ -134,9 +140,9 @@ export class AppComponent implements OnInit {
 
     this.authLoading = true;
     const request = {
-      phoneNumber: this.authRequestForm.getRawValue().phoneNumber ?? '',
-      otpCode: this.otpForm.getRawValue().otpCode ?? '',
-      displayName: this.authRequestForm.getRawValue().displayName ?? 'Neighbor'
+      phoneNumber: (this.authRequestForm.getRawValue().phoneNumber ?? '').trim(),
+      otpCode: (this.otpForm.getRawValue().otpCode ?? '').replace(/\D/g, '').slice(0, 6),
+      displayName: (this.authRequestForm.getRawValue().displayName ?? 'Neighbor').trim()
     };
 
     this.authService.verifyOtp(request).subscribe({

@@ -43,6 +43,28 @@
   color: var(--ink-strong);
 }
 
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0) scale(0.985);
+  filter: blur(8px);
+  transition:
+    opacity 620ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 620ms cubic-bezier(0.19, 1, 0.22, 1),
+    filter 620ms cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0);
+}
+
+.parallax-scroll {
+  transform: translate3d(0, var(--parallax-offset, 0px), 0);
+  will-change: transform;
+}
+
 .hero {
   display: grid;
   grid-template-columns: 1fr minmax(220px, 300px);
@@ -92,6 +114,10 @@ h1 {
 }
 
 .showcase-panel {
+  margin-bottom: 1.1rem;
+}
+
+.parallax-panel {
   margin-bottom: 1.1rem;
 }
 
@@ -262,6 +288,13 @@ select:focus {
     rgba(5, 5, 6, 0.88);
   animation: rise 0.35s ease;
   overflow: hidden;
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.post-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 20px 34px -28px rgba(0, 0, 0, 0.98), 0 0 28px -22px rgba(255, 255, 255, 0.65);
 }
 
 .post-card::before {
@@ -276,6 +309,29 @@ select:focus {
 
 .post-card:hover::before {
   opacity: 0.5;
+}
+
+.post-card::after,
+.my-post-card::after,
+.collab-card::after {
+  content: '';
+  position: absolute;
+  top: -125%;
+  left: -40%;
+  width: 48%;
+  height: 320%;
+  transform: rotate(18deg);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+
+.post-card:hover::after,
+.my-post-card:hover::after,
+.collab-card:hover::after {
+  opacity: 0.55;
+  animation: cardSweep 1.9s ease;
 }
 
 .post-card__header {
@@ -394,6 +450,8 @@ h3 {
 }
 
 .my-post-card {
+  position: relative;
+  overflow: hidden;
   border: 1px solid var(--edge-soft);
   border-radius: 15px;
   padding: 0.95rem;
@@ -402,6 +460,13 @@ h3 {
     linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
     rgba(6, 6, 8, 0.9);
   box-shadow: 0 16px 34px -30px rgba(0, 0, 0, 0.95);
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+.my-post-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 20px 34px -28px rgba(0, 0, 0, 0.98), 0 0 28px -22px rgba(255, 255, 255, 0.65);
 }
 
 .interest-box {
@@ -419,11 +484,19 @@ h3 {
 }
 
 .collab-card {
+  position: relative;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 10px;
   padding: 0.55rem 0.6rem;
   margin-top: 0.45rem;
   background: rgba(255, 255, 255, 0.05);
+  transition: transform 200ms ease, border-color 200ms ease;
+}
+
+.collab-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.36);
 }
 
 .collab-card p {
@@ -505,6 +578,15 @@ h3 {
   }
   100% {
     transform: rotate(0deg) scale(1);
+  }
+}
+
+@keyframes cardSweep {
+  0% {
+    transform: translateX(-20%) rotate(18deg);
+  }
+  100% {
+    transform: translateX(360%) rotate(18deg);
   }
 }
 

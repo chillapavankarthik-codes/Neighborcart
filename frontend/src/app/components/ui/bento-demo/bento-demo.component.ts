@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { ParallaxScrollDirective } from '../../../directives/parallax-scroll.directive';
+import { RevealOnScrollDirective } from '../../../directives/reveal-on-scroll.directive';
 import { BentoCardComponent } from '../bento-card/bento-card.component';
 import { BentoGridComponent } from '../bento-grid/bento-grid.component';
 
@@ -19,7 +21,7 @@ interface BentoFeature {
 @Component({
   selector: 'app-bento-demo',
   standalone: true,
-  imports: [CommonModule, BentoGridComponent, BentoCardComponent],
+  imports: [CommonModule, BentoGridComponent, BentoCardComponent, RevealOnScrollDirective, ParallaxScrollDirective],
   templateUrl: './bento-demo.component.html',
   styleUrls: ['./bento-demo.component.scss']
 })
