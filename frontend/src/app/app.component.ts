@@ -8,7 +8,6 @@ import { ChatMessage } from './models/chat-message.model';
 import { MyPostFeed } from './models/my-post-feed.model';
 import { OrderPost } from './models/order-post.model';
 import { BentoDemoComponent } from './components/ui/bento-demo/bento-demo.component';
-import { ParallaxFeatureSectionComponent } from './components/ui/parallax-feature-section/parallax-feature-section.component';
 import { SplineSceneBasicComponent } from './components/ui/spline-scene-basic/spline-scene-basic.component';
 import { ParallaxScrollDirective } from './directives/parallax-scroll.directive';
 import { RevealOnScrollDirective } from './directives/reveal-on-scroll.directive';
@@ -27,8 +26,7 @@ import { CreateOrderPostPayload, OrderPostService } from './services/order-post.
     RevealOnScrollDirective,
     ParallaxScrollDirective,
     SplineSceneBasicComponent,
-    BentoDemoComponent,
-    ParallaxFeatureSectionComponent
+    BentoDemoComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

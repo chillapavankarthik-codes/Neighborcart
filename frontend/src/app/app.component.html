@@ -19,11 +19,7 @@
     <app-bento-demo></app-bento-demo>
   </section>
 
-  <section class="panel parallax-panel" appRevealOnScroll [revealDelay]="120">
-    <app-parallax-feature-section></app-parallax-feature-section>
-  </section>
-
-  <section class="panel auth-panel" appRevealOnScroll [revealDelay]="160">
+  <section class="panel auth-panel" appRevealOnScroll [revealDelay]="120">
     <div class="auth-header">
       <h2>Secure Login (OTP)</h2>
       <span class="status" *ngIf="isAuthenticated">Authenticated</span>
@@ -69,7 +65,7 @@
     <p *ngIf="authMessage" class="auth-message">{{ authMessage }}</p>
   </section>
 
-  <section class="panel viewer-panel" appRevealOnScroll [revealDelay]="180">
+  <section class="panel viewer-panel" appRevealOnScroll [revealDelay]="140">
     <h2>Your Discovery Radius</h2>
     <form [formGroup]="viewerForm" class="viewer-grid">
       <label>
@@ -102,7 +98,7 @@
   </section>
 
   <main class="content-grid">
-    <section id="create-post" class="panel create-panel" appRevealOnScroll [revealDelay]="200">
+    <section id="create-post" class="panel create-panel" appRevealOnScroll [revealDelay]="160">
       <h2>Post Your Order Gap</h2>
       <form [formGroup]="createPostForm" class="create-grid" (ngSubmit)="createPost()">
         <label>
@@ -161,7 +157,7 @@
       <p class="create-feedback error" *ngIf="postFeedbackType === 'error'">{{ postFeedback }}</p>
     </section>
 
-    <section id="nearby-feed" class="panel feed-panel" appRevealOnScroll [revealDelay]="220">
+    <section id="nearby-feed" class="panel feed-panel" appRevealOnScroll [revealDelay]="180">
       <div class="feed-header">
         <h2>Nearby Shared Orders</h2>
         <button type="button" class="ghost" (click)="loadPosts()">Refresh feed</button>
@@ -232,7 +228,7 @@
       </aside>
     </section>
 
-    <section class="panel my-posts-panel" *ngIf="isAuthenticated" appRevealOnScroll [revealDelay]="250">
+    <section class="panel my-posts-panel" *ngIf="isAuthenticated" appRevealOnScroll [revealDelay]="200">
       <div class="feed-header">
         <h2>My Posted Feeds</h2>
         <button type="button" class="ghost" (click)="loadMyPosts()">Refresh</button>
