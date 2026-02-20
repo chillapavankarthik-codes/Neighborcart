@@ -1,0 +1,21 @@
+<app-card className="spline-card">
+  <app-spotlight className="spline-spotlight" fill="white"></app-spotlight>
+
+  <div class="spline-layout">
+    <div class="copy-column">
+      <p class="badge">NEIGHBORCART LIVE</p>
+      <h3>Find a Nearby Order Match Fast</h3>
+      <p>
+        Post your minimum-gap amount and let nearby neighbors join in before checkout.
+        One shared order, no forced extra items, less delivery wait.
+      </p>
+    </div>
+
+    <div class="scene-column">
+      <app-spline-scene
+        [scene]="scene"
+        className="full-size"
+      ></app-spline-scene>
+    </div>
+  </div>
+</app-card>

@@ -1,0 +1,300 @@
+<div class="page-shell">
+  <header class="hero">
+    <div class="hero__copy">
+      <p class="eyebrow">NEIGHBORCART</p>
+      <h1>Beat minimum-order fees with nearby people in minutes.</h1>
+      <p class="hero__sub">
+        Post your cart gap, discover neighbors within your radius, and close orders faster without stuffing carts with random items.
+      </p>
+    </div>
+    <aside class="ad-slot ad-slot--hero">
+      <p class="ad-label">Sponsored</p>
+      <h3>FreshHub+</h3>
+      <p>Weekend grocery drops with neighborhood discounts.</p>
+    </aside>
+  </header>
+
+  <section class="panel showcase-panel">
+    <app-spline-scene-basic></app-spline-scene-basic>
+    <app-bento-demo></app-bento-demo>
+  </section>
+
+  <section class="panel auth-panel">
+    <div class="auth-header">
+      <h2>Secure Login (OTP)</h2>
+      <span class="status" *ngIf="isAuthenticated">Authenticated</span>
+    </div>
+
+    <div class="auth-grid" *ngIf="!isAuthenticated">
+      <form [formGroup]="authRequestForm" (ngSubmit)="requestOtp()" class="auth-form">
+        <label>
+          Display name
+          <input type="text" formControlName="displayName" placeholder="Your public alias">
+        </label>
+        <label>
+          Phone number
+          <input type="tel" formControlName="phoneNumber" placeholder="(555) 555-1234">
+        </label>
+        <button type="submit" class="primary" [disabled]="authLoading">
+          {{ authLoading ? 'Sending...' : 'Request OTP' }}
+        </button>
+      </form>
+
+      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" class="auth-form">
+        <label>
+          6-digit OTP
+          <input type="text" formControlName="otpCode" maxlength="6" placeholder="Enter OTP code">
+        </label>
+        <button type="submit" class="cta" [disabled]="authLoading">
+          {{ authLoading ? 'Verifying...' : 'Verify & Sign In' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="auth-active" *ngIf="isAuthenticated && currentUser">
+      <p>
+        Signed in as <strong>{{ currentUser.displayName }}</strong> · {{ currentUser.phoneNumber }}
+      </p>
+      <button type="button" class="ghost" (click)="logout()" [disabled]="authLoading">
+        {{ authLoading ? 'Signing out...' : 'Sign out' }}
+      </button>
+    </div>
+
+    <p *ngIf="otpExpiresAt" class="muted">OTP expires at {{ otpExpiresAt | date:'h:mm a' }}</p>
+    <p *ngIf="devOtpCode" class="auth-dev">Dev OTP: {{ devOtpCode }}</p>
+    <p *ngIf="authMessage" class="auth-message">{{ authMessage }}</p>
+  </section>
+
+  <section class="panel viewer-panel">
+    <h2>Your Discovery Radius</h2>
+    <form [formGroup]="viewerForm" class="viewer-grid">
+      <label>
+        Display alias
+        <input type="text" formControlName="alias" placeholder="How others see you">
+      </label>
+      <label>
+        Latitude
+        <input type="number" formControlName="latitude" step="0.0001">
+      </label>
+      <label>
+        Longitude
+        <input type="number" formControlName="longitude" step="0.0001">
+      </label>
+      <label>
+        Radius: <strong>{{ selectedRadiusMiles }} miles</strong>
+        <input type="range" min="1" max="10" [value]="selectedRadiusMiles" (input)="onRadiusChange($any($event.target).value)">
+      </label>
+    </form>
+
+    <div class="store-filters">
+      <button
+        *ngFor="let store of stores"
+        type="button"
+        [class.active]="store === selectedStore"
+        (click)="onStoreChange(store)">
+        {{ store }}
+      </button>
+    </div>
+  </section>
+
+  <main class="content-grid">
+    <section id="create-post" class="panel create-panel">
+      <h2>Post Your Order Gap</h2>
+      <form [formGroup]="createPostForm" class="create-grid" (ngSubmit)="createPost()">
+        <label>
+          Initiator alias
+          <input type="text" formControlName="initiatorAlias">
+        </label>
+        <label>
+          Platform
+          <select formControlName="storeName">
+            <option *ngFor="let store of stores.slice(1)" [value]="store">{{ store }}</option>
+          </select>
+        </label>
+        <label>
+          Area hint
+          <input type="text" formControlName="addressHint">
+        </label>
+        <label>
+          Expected delivery
+          <input type="datetime-local" formControlName="expectedDeliveryTime">
+        </label>
+        <label>
+          Minimum order ($)
+          <input type="number" formControlName="minimumOrderAmount" step="0.01">
+        </label>
+        <label>
+          Current cart ($)
+          <input type="number" formControlName="currentCartAmount" step="0.01">
+        </label>
+        <label>
+          Post radius (miles)
+          <input type="number" formControlName="postRadiusMiles" min="1" max="10">
+        </label>
+        <label class="create-grid__wide">
+          Headline
+          <input type="text" formControlName="title">
+        </label>
+        <label class="create-grid__wide">
+          Notes
+          <textarea rows="2" formControlName="notes"></textarea>
+        </label>
+        <label>
+          Masked phone
+          <input type="text" formControlName="maskedPhone">
+        </label>
+        <label>
+          Real phone
+          <input type="text" formControlName="phoneNumber">
+        </label>
+
+        <button class="cta" type="submit" [disabled]="createLoading || !isAuthenticated">
+          {{ createLoading ? 'Posting...' : 'Publish to feed' }}
+        </button>
+      </form>
+      <p class="muted create-help" *ngIf="!isAuthenticated">Sign in with OTP to publish your post.</p>
+      <p class="create-feedback success" *ngIf="postFeedbackType === 'success'">{{ postFeedback }}</p>
+      <p class="create-feedback error" *ngIf="postFeedbackType === 'error'">{{ postFeedback }}</p>
+    </section>
+
+    <section id="nearby-feed" class="panel feed-panel">
+      <div class="feed-header">
+        <h2>Nearby Shared Orders</h2>
+        <button type="button" class="ghost" (click)="loadPosts()">Refresh feed</button>
+      </div>
+
+      <p *ngIf="loading" class="muted">Loading active posts...</p>
+      <p *ngIf="!loading && posts.length === 0" class="muted">No posts found for this radius. Expand range or create one.</p>
+
+      <article class="post-card" *ngFor="let post of posts; trackBy: trackByPostId">
+        <div class="post-card__header">
+          <div>
+            <p class="store">{{ post.storeName }}</p>
+            <h3>{{ post.title }}</h3>
+          </div>
+          <span class="distance" *ngIf="post.distanceMiles > 0">{{ post.distanceMiles }} mi</span>
+        </div>
+
+        <p class="meta">Host: <strong>{{ post.initiatorAlias }}</strong> · {{ post.addressHint }}</p>
+        <p class="meta">ETA: {{ post.expectedDeliveryTime | date:'EEE, MMM d · h:mm a' }}</p>
+
+        <div class="stats-row">
+          <div>
+            <span class="label">Cart</span>
+            <strong>${{ post.currentCartAmount | number:'1.2-2' }} / ${{ post.minimumOrderAmount | number:'1.2-2' }}</strong>
+          </div>
+          <div class="remaining">
+            <span class="label">Still needed</span>
+            <strong>${{ post.remainingAmount | number:'1.2-2' }}</strong>
+          </div>
+          <div>
+            <span class="label">Radius</span>
+            <strong>{{ post.postRadiusMiles }} mi</strong>
+          </div>
+        </div>
+
+        <p class="notes">{{ post.notes }}</p>
+
+        <div class="actions">
+          <button type="button" class="primary" (click)="expressInterest(post)" [disabled]="post.viewerInterested">
+            {{ post.viewerInterested ? 'Joined' : "I'm in" }}
+          </button>
+          <button type="button" class="ghost" (click)="openChat(post)">Open chat</button>
+          <button
+            *ngIf="post.canManageContact"
+            type="button"
+            class="ghost"
+            (click)="toggleContact(post)">
+            {{ post.phoneRevealEnabled ? 'Mask phone' : 'Reveal phone to interested users' }}
+          </button>
+        </div>
+
+        <p class="contact">
+          Contact: {{ post.visiblePhone }} · {{ post.interestedCount }} interested
+          <span *ngIf="post.phoneRevealEnabled && !post.viewerInterested && !post.canManageContact">
+            (Join this order to view full contact)
+          </span>
+        </p>
+      </article>
+
+      <aside class="ad-slot ad-slot--feed">
+        <p class="ad-label">Ad</p>
+        <h3>Local Market Co-op</h3>
+        <p>Join 3 neighbors, unlock 15% produce credit this week.</p>
+      </aside>
+    </section>
+
+    <section class="panel my-posts-panel" *ngIf="isAuthenticated">
+      <div class="feed-header">
+        <h2>My Posted Feeds</h2>
+        <button type="button" class="ghost" (click)="loadMyPosts()">Refresh</button>
+      </div>
+
+      <p class="muted" *ngIf="myPostsLoading">Loading your posts...</p>
+      <p class="muted" *ngIf="!myPostsLoading && myPosts.length === 0">No posts yet. Publish one above.</p>
+
+      <article class="my-post-card" *ngFor="let feed of myPosts; trackBy: trackByMyPostId">
+        <div class="post-card__header">
+          <div>
+            <p class="store">{{ feed.post.storeName }}</p>
+            <h3>{{ feed.post.title }}</h3>
+          </div>
+          <span class="distance">{{ feed.post.interestedCount }} interested</span>
+        </div>
+
+        <p class="meta">Area: <strong>{{ feed.post.addressHint }}</strong></p>
+        <p class="meta">ETA: {{ feed.post.expectedDeliveryTime | date:'EEE, MMM d · h:mm a' }}</p>
+
+        <div class="stats-row">
+          <div>
+            <span class="label">Cart</span>
+            <strong>${{ feed.post.currentCartAmount | number:'1.2-2' }} / ${{ feed.post.minimumOrderAmount | number:'1.2-2' }}</strong>
+          </div>
+          <div class="remaining">
+            <span class="label">Still needed</span>
+            <strong>${{ feed.post.remainingAmount | number:'1.2-2' }}</strong>
+          </div>
+          <div>
+            <span class="label">Contact</span>
+            <strong>{{ feed.post.visiblePhone }}</strong>
+          </div>
+        </div>
+
+        <p class="notes">{{ feed.post.notes }}</p>
+
+        <div class="interest-box">
+          <h4>People Who Want To Collaborate</h4>
+          <p class="muted" *ngIf="feed.interestedUsers.length === 0">No collaborators yet.</p>
+
+          <article class="collab-card" *ngFor="let person of feed.interestedUsers">
+            <p><strong>{{ person.displayName }}</strong> · {{ person.phoneNumber }}</p>
+            <p class="muted">Interested at {{ person.interestedAt | date:'EEE, MMM d · h:mm a' }}</p>
+          </article>
+        </div>
+      </article>
+    </section>
+
+    <section id="chat" class="panel chat-panel" *ngIf="selectedPost">
+      <div class="chat-header">
+        <h2>Chat · {{ selectedPost.storeName }}</h2>
+        <button type="button" class="ghost" (click)="closeChat()">Close</button>
+      </div>
+
+      <p class="muted" *ngIf="chatLoading">Loading messages...</p>
+
+      <div class="messages" *ngIf="!chatLoading">
+        <article class="msg" *ngFor="let msg of chatMessages">
+          <p><strong>{{ msg.senderAlias }}</strong> · {{ msg.sentAt | date:'h:mm a' }}</p>
+          <p>{{ msg.text }}</p>
+        </article>
+        <p class="muted" *ngIf="chatMessages.length === 0">No messages yet. Start the exchange.</p>
+      </div>
+
+      <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="chat-compose">
+        <textarea rows="2" formControlName="text" placeholder="Ask what item they can add for you"></textarea>
+        <button type="submit" class="primary" [disabled]="!isAuthenticated">Send</button>
+      </form>
+    </section>
+  </main>
+
+</div>

@@ -1,0 +1,53 @@
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background-color 180ms ease, transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.ui-button:hover {
+  transform: translateY(-1px);
+}
+
+.size-default {
+  height: 2.5rem;
+  padding: 0 1rem;
+}
+
+.size-sm {
+  height: 2.2rem;
+  padding: 0 0.8rem;
+}
+
+.size-lg {
+  height: 2.75rem;
+  padding: 0 1.25rem;
+}
+
+.variant-default {
+  background: #f4f4f5;
+  color: #09090b;
+}
+
+.variant-ghost {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f4f4f5;
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.variant-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 18px -10px rgba(255, 255, 255, 0.95);
+}
+
+.variant-outline {
+  background: transparent;
+  color: #f4f4f5;
+  border-color: rgba(255, 255, 255, 0.4);
+}

@@ -1,0 +1,11 @@
+<div [ngClass]="['spline-shell', className]">
+  <div *ngIf="!viewerReady" class="spline-loader-wrap">
+    <span class="loader"></span>
+  </div>
+
+  <spline-viewer
+    *ngIf="viewerReady"
+    class="spline-viewer"
+    [attr.url]="scene"
+  ></spline-viewer>
+</div>

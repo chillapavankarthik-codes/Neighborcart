@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: neighborcart-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ordershare}
+      POSTGRES_USER: ${POSTGRES_USER:-ordershare}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ordershare}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: neighborcart-backend
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      SERVER_PORT: 8080
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-ordershare}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-ordershare}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-ordershare}
+      APP_AUTH_DEV_OTP_ENABLED: ${APP_AUTH_DEV_OTP_ENABLED:-false}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-http://localhost,http://127.0.0.1}
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: neighborcart-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:

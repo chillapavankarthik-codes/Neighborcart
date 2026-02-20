@@ -1,0 +1,8 @@
+<div
+  #spotlightNode
+  [ngClass]="['spotlight-hover', className, isHovered ? 'is-visible' : 'is-hidden']"
+  [style.width.px]="size"
+  [style.height.px]="size"
+  [style.left.px]="mouseX - size / 2"
+  [style.top.px]="mouseY - size / 2"
+></div>

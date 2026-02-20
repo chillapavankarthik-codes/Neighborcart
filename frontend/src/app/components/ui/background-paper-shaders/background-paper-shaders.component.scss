@@ -1,0 +1,231 @@
+.shader-shell {
+  margin-top: 1.4rem;
+}
+
+.shader-stage {
+  position: relative;
+  width: 100%;
+  min-height: 560px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mesh-layer {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 40%, rgba(255, 255, 255, 0.06), transparent 45%),
+    linear-gradient(120deg, #000000 0%, #1a1a1a 40%, #333333 100%);
+  background-size: 140% 140%;
+  animation: meshShift linear infinite;
+}
+
+.dots-layer {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 40%, rgba(255, 255, 255, 0.08) 0.07rem, transparent 0.08rem),
+    radial-gradient(circle at 75% 65%, rgba(255, 255, 255, 0.06) 0.08rem, transparent 0.09rem);
+  background-size: calc(32px * var(--dot-scale, 1)) calc(32px * var(--dot-scale, 1));
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+
+.lighting {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 999px;
+  animation: pulse ease-in-out infinite;
+}
+
+.orb-a {
+  top: 24%;
+  left: 32%;
+  width: 8rem;
+  height: 8rem;
+  background: rgba(75, 85, 99, 0.18);
+  filter: blur(42px);
+}
+
+.orb-b {
+  right: 24%;
+  bottom: 30%;
+  width: 6rem;
+  height: 6rem;
+  background: rgba(255, 255, 255, 0.08);
+  filter: blur(34px);
+}
+
+.orb-c {
+  top: 52%;
+  right: 34%;
+  width: 5rem;
+  height: 5rem;
+  background: rgba(17, 24, 39, 0.22);
+  filter: blur(28px);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.effect-controls,
+.param-controls,
+.status,
+.cli-copy,
+.top-copy {
+  pointer-events: auto;
+  position: absolute;
+  z-index: 2;
+}
+
+.top-copy {
+  top: 1rem;
+  left: 1rem;
+  max-width: min(560px, calc(100% - 2rem));
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.top-copy .kicker {
+  margin: 0;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.top-copy h3 {
+  margin: 0.35rem 0 0.35rem;
+  font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+}
+
+.top-copy p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.effect-controls {
+  left: 1rem;
+  bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.effect-controls button {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+}
+
+.effect-controls button.active {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.param-controls {
+  right: 1rem;
+  bottom: 1rem;
+  display: grid;
+  gap: 0.6rem;
+  width: min(260px, calc(100% - 2rem));
+  padding: 0.7rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.17);
+  background: rgba(0, 0, 0, 0.42);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.82rem;
+}
+
+.param-controls label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.param-controls input {
+  width: 100%;
+}
+
+.status {
+  top: 1rem;
+  right: 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  padding: 0.35rem 0.7rem;
+  text-transform: uppercase;
+}
+
+.cli-copy {
+  left: 50%;
+  bottom: 44%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.45);
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.cli-copy button {
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.45rem;
+}
+
+.interacting .mesh-layer {
+  filter: saturate(1.25);
+}
+
+@keyframes meshShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(0.85);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 780px) {
+  .shader-stage {
+    min-height: 620px;
+  }
+
+  .cli-copy {
+    bottom: 54%;
+  }
+}

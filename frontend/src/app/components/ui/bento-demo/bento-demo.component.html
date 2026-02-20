@@ -1,0 +1,20 @@
+<section class="bento-shell">
+  <h3>High-Value Flow Cards</h3>
+  <p class="subcopy">
+    Post faster, match nearby, and close secure handoffs without paying unnecessary delivery fees.
+  </p>
+  <app-bento-grid>
+    <app-bento-card
+      *ngFor="let feature of features"
+      [name]="feature.name"
+      [description]="feature.description"
+      [metric]="feature.metric"
+      [helperText]="feature.helperText"
+      [href]="feature.href"
+      [cta]="feature.cta"
+      [image]="feature.image"
+      [icon]="feature.icon"
+      [className]="feature.className"
+    ></app-bento-card>
+  </app-bento-grid>
+</section>

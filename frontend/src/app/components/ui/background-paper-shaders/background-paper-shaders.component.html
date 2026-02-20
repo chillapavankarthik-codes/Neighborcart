@@ -1,0 +1,45 @@
+<section class="shader-shell">
+  <div class="shader-stage" [class.interacting]="isInteracting" (mouseenter)="isInteracting = true" (mouseleave)="isInteracting = false">
+    <div class="mesh-layer" *ngIf="activeEffect === 'mesh' || activeEffect === 'combined'" [style.animationDuration.s]="16 / speed"></div>
+
+    <div class="dots-layer" *ngIf="activeEffect === 'dots' || activeEffect === 'combined'" [style.opacity]="activeEffect === 'combined' ? 0.55 : 1"></div>
+
+    <div class="lighting">
+      <div class="orb orb-a" [style.animationDuration.s]="3 / speed"></div>
+      <div class="orb orb-b" [style.animationDuration.s]="2 / speed"></div>
+      <div class="orb orb-c" [style.animationDuration.s]="4 / speed"></div>
+    </div>
+
+    <div class="overlay">
+      <div class="top-copy">
+        <p class="kicker">REAL-TIME MATCH SIGNAL</p>
+        <h3>Live neighborhood demand visualization</h3>
+        <p>Use this as an interactive hero section while users browse active shared-order opportunities.</p>
+      </div>
+
+      <div class="effect-controls">
+        <button type="button" [class.active]="activeEffect === 'mesh'" (click)="setEffect('mesh')">Mesh</button>
+        <button type="button" [class.active]="activeEffect === 'dots'" (click)="setEffect('dots')">Dots</button>
+        <button type="button" [class.active]="activeEffect === 'combined'" (click)="setEffect('combined')">Combined</button>
+      </div>
+
+      <div class="param-controls">
+        <label>
+          Intensity: {{ intensity | number:'1.1-1' }}
+          <input type="range" min="0.5" max="2.5" step="0.1" [(ngModel)]="intensity">
+        </label>
+        <label>
+          Speed: {{ speed | number:'1.1-1' }}
+          <input type="range" min="0.4" max="2" step="0.1" [(ngModel)]="speed">
+        </label>
+      </div>
+
+      <div class="status">{{ isInteracting ? 'Interacting' : 'Idle' }}</div>
+    </div>
+
+    <div class="cli-copy">
+      <span>Host controls can adjust visual intensity</span>
+      <button type="button" (click)="copyToClipboard()">{{ copied ? 'Copied' : 'Copy tech stack' }}</button>
+    </div>
+  </div>
+</section>
